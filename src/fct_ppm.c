@@ -111,7 +111,10 @@ void ppm_negative(ppm * src, ppm **dst){
     }
 }
 
-//ppm * ppm_extract(char * fname,ppm * ppm_t,int dx, int dy,)
+ppm * ppm_extract(char * fname,ppm * ppm_t,int dx, int dy,int height,int width){
+
+}
+
 int main(){
     ppm * p = ppm_read_asc("/home/lacaz/Bureau/TD1/src/eye_s_asc.ppm");
     //ppm_write_asc("./bin/teton.ppm",p);
