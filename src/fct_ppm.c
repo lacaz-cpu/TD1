@@ -67,8 +67,33 @@ int ppm_write_asc(char * fname, ppm * p){
     return 0;
 }
 
+ppm *  ppm_read_bin(char * fname){
+    FILE * fic = fopen(fname,"r");
+    char c[2];
+    int h,w,m;
+    fscanf(fic,"%s",c);
+    if(c[1] != '6'){
+        return NULL;
+    }
+    sup_input(fic);
+    sup_input(fic);
+    fscanf(fic,"%d",&h);
+    fscanf(fic,"%d",&w);
+    fscanf(fic,"%d",&m);
+    ppm * p = ppm_alloc(h,w,m);
+    fread(&p->pixels[0][0].r,sizeof(unsigned char),1,fic);
+    for(int i = 0; i < p->height;i++){
+        for(int j = 0;j < p->width;j++){
+            fread(&p->pixels[i][j],sizeof(rgb),1,fic);
+        } 
+    }
+    return p;
+}
+
 int main(){
-    ppm * p = ppm_read_asc("/home/lacaz/Bureau/TD1/src/eye_s_asc.ppm");
-    ppm_write_asc("teton.ppm",p);
+    //ppm * p = ppm_read_asc("/home/lacaz/Bureau/TD1/src/eye_s_asc.ppm");
+    //ppm_write_asc("./bin/teton.ppm",p);
+    ppm * t = ppm_read_bin("/home/lacaz/Bureau/TD1/bin/teton_bin.ppm");
+    ppm_write_asc("./bin/test.ppm",t);
     return 0;
 }
