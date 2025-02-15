@@ -127,16 +127,19 @@ unsigned char ** ppm_get_histogram(ppm * ppm_t){
         hist[i] = (unsigned char*)malloc(ppm_t->max_value*sizeof(unsigned char));
     for(int i = 0; i < ppm_t->height;i++){
         for(int j = 0;j < ppm_t->width;j++){
-            hist[0][ppm_t->pixels[i][j].r];
-            hist[0][ppm_t->pixels[i][j].g];
-            hist[0][ppm_t->pixels[i][j].b];
+            hist[0][ppm_t->pixels[i][j].r]++;
+            hist[1][ppm_t->pixels[i][j].g]++;
+            hist[2][ppm_t->pixels[i][j].b]++;
         } 
     }
     return hist;
 }
 
 void ppm_write_histogram(ppm * p,char * fname){
-
+    FILE * fic = fopen(fname,"w");
+    unsigned char ** h = ppm_get_histogram(p);
+    for(int i = 0;i < p->max_value+1;i++)
+        fprintf(fic ,"%d %d %d %d\n",i,h[0][i],h[1][i],h[2][i]);
 }
 
 int main(){
@@ -150,5 +153,6 @@ int main(){
     ppm_write_asc("./bin/test.ppm",tkt);
     ppm_extract("./bin/test.ppm",p,20,20,250,250);
     */
+    ppm_write_histogram(p,"./bin/test.txt");
     return 0;
 }
