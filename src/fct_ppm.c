@@ -68,7 +68,7 @@ int ppm_write_asc(char * fname, ppm * p){
 }
 
 ppm *  ppm_read_bin(char * fname){
-    FILE * fic = fopen(fname,"r");
+    FILE * fic = fopen(fname,"rb");
     char c[2];
     int h,w,m;
     fscanf(fic,"%s",c);
@@ -80,8 +80,8 @@ ppm *  ppm_read_bin(char * fname){
     fscanf(fic,"%d",&h);
     fscanf(fic,"%d",&w);
     fscanf(fic,"%d",&m);
+    printf("%d",h);
     ppm * p = ppm_alloc(h,w,m);
-    fread(&p->pixels[0][0].r,sizeof(unsigned char),1,fic);
     for(int i = 0; i < p->height;i++){
         for(int j = 0;j < p->width;j++){
             fread(&p->pixels[i][j],sizeof(rgb),1,fic);
@@ -90,10 +90,23 @@ ppm *  ppm_read_bin(char * fname){
     return p;
 }
 
+void ppm_write_bin(char * fname,ppm * p){
+    FILE * fic = fopen(fname, "wb");
+    fprintf(fic,"P6\n");
+    fprintf(fic,"%d %d \n%d\n",p->height,p->width,p->max_value);
+    for(int i = 0; i < p->height;i++){
+        for(int j = 0;j < p->width;j++){
+            fwrite(&p->pixels[i][j],sizeof(rgb),1,fic);
+        } 
+    }
+}
+
 int main(){
-    //ppm * p = ppm_read_asc("/home/lacaz/Bureau/TD1/src/eye_s_asc.ppm");
+    ppm * p = ppm_read_asc("/home/lacaz/Bureau/TD1/src/eye_s_asc.ppm");
     //ppm_write_asc("./bin/teton.ppm",p);
+    //ppm_write_bin("/home/lacaz/Bureau/TD1/bin/teton_bin.ppm",p);
     ppm * t = ppm_read_bin("/home/lacaz/Bureau/TD1/bin/teton_bin.ppm");
     ppm_write_asc("./bin/test.ppm",t);
+    
     return 0;
 }
