@@ -15,8 +15,12 @@ ppm * ppm_alloc(int height,int width,int max_value){
 } 
 
 void ppm_free(ppm * ppm_t){
-    
+    for(int i = 0; i < ppm_t->height;i++)
+        free(ppm_t->pixels[i]);
+    free(ppm_t->pixels);
+    free(ppm_t);
 }
+
 int main(){
     return 0;
 }
