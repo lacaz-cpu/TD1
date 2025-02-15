@@ -71,20 +71,19 @@ ppm *  ppm_read_bin(char * fname){
     FILE * fic = fopen(fname,"rb");
     char c[2];
     int h,w,m;
+    unsigned char car;
     fscanf(fic,"%s",c);
     if(c[1] != '6'){
         return NULL;
     }
-    sup_input(fic);
-    sup_input(fic);
     fscanf(fic,"%d",&h);
     fscanf(fic,"%d",&w);
     fscanf(fic,"%d",&m);
-    printf("%d",h);
     ppm * p = ppm_alloc(h,w,m);
+    fread(&car,sizeof(unsigned char),1,fic);
     for(int i = 0; i < p->height;i++){
         for(int j = 0;j < p->width;j++){
-            fread(&p->pixels[i][j],sizeof(rgb),1,fic);
+            fread(&p->pixels[i][j],sizeof(rgb),p->height*p->width,fic);
         } 
     }
     return p;
@@ -101,12 +100,26 @@ void ppm_write_bin(char * fname,ppm * p){
     }
 }
 
+void ppm_negative(ppm * src, ppm **dst){
+    (*dst) = ppm_alloc(src->height,src->width,src->max_value);
+    for(int i = 0; i < src->height;i++){
+        for(int j = 0;j < src->width;j++){
+            (*dst)->pixels[i][j].r = src->max_value -(src->pixels[i][j].r);
+            (*dst)->pixels[i][j].g = src->max_value -(src->pixels[i][j].g);
+            (*dst)->pixels[i][j].b = src->max_value -(src->pixels[i][j].b);
+        }
+    }
+}
+
+//ppm * ppm_extract(char * fname,ppm * ppm_t,int dx, int dy,)
 int main(){
     ppm * p = ppm_read_asc("/home/lacaz/Bureau/TD1/src/eye_s_asc.ppm");
     //ppm_write_asc("./bin/teton.ppm",p);
-    //ppm_write_bin("/home/lacaz/Bureau/TD1/bin/teton_bin.ppm",p);
+    ppm_write_bin("/home/lacaz/Bureau/TD1/bin/teton_bin.ppm",p);
     ppm * t = ppm_read_bin("/home/lacaz/Bureau/TD1/bin/teton_bin.ppm");
-    ppm_write_asc("./bin/test.ppm",t);
+    ppm * tkt;
+    ppm_negative(t,&tkt);
+    ppm_write_asc("./bin/test.ppm",tkt);
     
     return 0;
 }
