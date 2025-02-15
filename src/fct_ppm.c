@@ -21,6 +21,35 @@ void ppm_free(ppm * ppm_t){
     free(ppm_t);
 }
 
+void sup_input(FILE * fichier){
+	char car;
+	fscanf(fichier, "%c",&car);
+	while(car != '\n'){
+		fscanf(fichier,"%c",&car);
+	}
+}
+
+ppm *  ppm_read_asc(char * fname){
+    FILE * fic = fopen(fname,"r");
+    char c[2];
+    int h,w,m;
+    fscanf(fic,"%s",c);
+    if(c[1] != '3'){
+        return NULL;
+    }
+    sup_input(fic);
+    sup_input(fic);
+    fscanf(fic,"%d",&w);
+    fscanf(fic,"%d",&h);
+    fscanf(fic,"%d",&m);
+    ppm * p = ppm_alloc(h,w,m);
+    for(int i = 0; i < p->width; i++){
+        
+    }
+    return 0;
+}
+
 int main(){
+    ppm_read_asc("/home/lacaz/Bureau/TD1/src/eye_s_asc.ppm");
     return 0;
 }
