@@ -39,17 +39,36 @@ ppm *  ppm_read_asc(char * fname){
     }
     sup_input(fic);
     sup_input(fic);
-    fscanf(fic,"%d",&w);
     fscanf(fic,"%d",&h);
+    fscanf(fic,"%d",&w);
     fscanf(fic,"%d",&m);
     ppm * p = ppm_alloc(h,w,m);
-    for(int i = 0; i < p->width; i++){
-        
+    for(int i = 0; i < p->height; i++){
+        for(int j = 0; j < p->width; j++){
+            fscanf(fic,"%hhu",&(*p).pixels[i][j].r);
+            fscanf(fic,"%hhu",&(*p).pixels[i][j].g);
+            fscanf(fic,"%hhu",&(*p).pixels[i][j].b);
+        }
+    }
+    return p;
+}
+
+int ppm_write_asc(char * fname, ppm * p){
+    FILE * fic = fopen(fname, "w");
+    if(fic == NULL)
+        return 1;
+    fprintf(fic ,"P3\n");
+    fprintf(fic,"%d %d \n%d\n",p->height,p->width,p->max_value);
+    for(int i = 0; i < p->height;i++){
+        for(int j = 0;j < p->width;j++){
+            fprintf(fic , "%hhu\n%hhu\n%hhu\n",p->pixels[i][j].r,p->pixels[i][j].g,p->pixels[i][j].b);
+        } 
     }
     return 0;
 }
 
 int main(){
-    ppm_read_asc("/home/lacaz/Bureau/TD1/src/eye_s_asc.ppm");
+    ppm * p = ppm_read_asc("/home/lacaz/Bureau/TD1/src/eye_s_asc.ppm");
+    ppm_write_asc("teton.ppm",p);
     return 0;
 }
