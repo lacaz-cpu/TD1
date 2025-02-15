@@ -1,4 +1,5 @@
 #include "fct_ppm.h"
+#include "fct_pgm.h"
 
 ppm * ppm_alloc(int height,int width,int max_value){
     ppm * ppm_t = (ppm*)malloc(sizeof(ppm));
@@ -140,6 +141,10 @@ void ppm_write_histogram(ppm * p,char * fname){
     unsigned char ** h = ppm_get_histogram(p);
     for(int i = 0;i < p->max_value+1;i++)
         fprintf(fic ,"%d %d %d %d\n",i,h[0][i],h[1][i],h[2][i]);
+}
+
+void ppm_to_pgm(ppm * ppm_t,pgm * pgm_t){
+    //fonction ppm to pgm
 }
 
 int main(){
