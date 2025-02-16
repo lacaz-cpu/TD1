@@ -22,13 +22,6 @@ void ppm_free(ppm * ppm_t){
     free(ppm_t);
 }
 
-void sup_input(FILE * fichier){
-	char car;
-	fscanf(fichier, "%c",&car);
-	while(car != '\n'){
-		fscanf(fichier,"%c",&car);
-	}
-}
 
 ppm *  ppm_read_asc(char * fname){
     FILE * fic = fopen(fname,"r");
@@ -143,8 +136,14 @@ void ppm_write_histogram(ppm * p,char * fname){
         fprintf(fic ,"%d %d %d %d\n",i,h[0][i],h[1][i],h[2][i]);
 }
 
-void ppm_to_pgm(ppm * ppm_t,pgm * pgm_t){
-    //fonction ppm to pgm
+void ppm_to_pgm(ppm * ppm_t,pgm ** pgm_t){
+    (*pgm_t) = pgm_alloc(ppm_t->height,ppm_t->width,ppm_t->max_value);
+    for(int i = 0; i < (*pgm_t)->height;i++){
+        for(int j = 0; j < (*pgm_t)->width;j++){
+            (*pgm_t)->pixels[i][j] = 0.299 * ppm_t->pixels[i][j].r + ppm_t->pixels[i][j].g * 0.587 + ppm_t->pixels[i][j].b * 0.114;
+        }
+    }
+    pgm_write_asc((*pgm_t),"test.pgm");
 }
 
 int main(){
@@ -157,7 +156,9 @@ int main(){
     ppm_negative(t,&tkt);
     ppm_write_asc("./bin/test.ppm",tkt);
     ppm_extract("./bin/test.ppm",p,20,20,250,250);
-    */
     ppm_write_histogram(p,"./bin/test.txt");
+    */
+    pgm * pgm_t;
+    ppm_to_pgm(p,&pgm_t);
     return 0;
 }

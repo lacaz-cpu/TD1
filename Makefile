@@ -18,7 +18,7 @@ fct_ppm.o: $(SRC_DIR)fct_ppm.c
 	$(CC) $(CFLAGS)  $< -c $(INC) -o $(OBJ_DIR)/$@
 
 
-ppm : fct_ppm.o
+ppm : fct_ppm.o fct_pgm.o 
 	$(CC) $(OBJ_DIR)/* -o $@ 
 
 pgm : fct_pgm.o test_pgm.o 
